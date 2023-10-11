@@ -209,7 +209,7 @@ bedrock = boto3.client(
     region_name="us-east-1",
 )
 
-# Ask LLM
+# Ask LLM 
 llm_mentor_response = Bedrock(
     model_id=LLM_MODEL_ID,
     model_kwargs={
@@ -282,8 +282,6 @@ def generate_feedback(text):
         content_handler=LLMHandler(),
         endpoint_kwargs={"CustomAttributes": "accept_eula=true"},
     )
-
-    #https://github.com/aws-samples/amazon-bedrock-workshop/blob/main/03_QuestionAnswering/01_qa_w_rag_claude.ipynb
 
     llm_chain = LLMChain(
         llm=sm_llm, prompt=PromptTemplate.from_template(prompt_template)
