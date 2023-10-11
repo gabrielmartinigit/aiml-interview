@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "API URL",
+  baseURL: "{SimuladorApi}",
 });
 
 export default api;

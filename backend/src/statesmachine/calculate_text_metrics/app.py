@@ -5,6 +5,10 @@ import boto3
 from typing import Dict
 
 # LLM
+from langchain.llms import Bedrock
+from langchain.chains.question_answering import load_qa_chain
+
+# LLM
 from langchain.llms.sagemaker_endpoint import (
     LLMContentHandler,
     SagemakerEndpoint,
@@ -13,6 +17,8 @@ from langchain import PromptTemplate, LLMChain
 
 BUCKET = os.environ["BUCKET"]
 s3 = boto3.client("s3")
+
+LLM_MODEL_ID = 'anthropic.claude-v2'
 
 weasel_words = [
     "ai",
@@ -197,6 +203,22 @@ metrics = {
     "feedback": "",
 }
 
+bedrock = boto3.client(
+    "bedrock-runtime",
+    endpoint_url="https://bedrock-runtime.us-east-1.amazonaws.com",
+    region_name="us-east-1",
+)
+
+# Ask LLM
+llm_mentor_response = Bedrock(
+    model_id=LLM_MODEL_ID,
+    model_kwargs={
+        "max_tokens_to_sample": 1000,
+        "temperature": 0.5,
+        "top_p": 0.7,
+    },
+    client=bedrock,
+)
 
 def calculate_wpm(text):
     return 0
@@ -246,7 +268,6 @@ class LLMHandler(LLMContentHandler):
         response_json = json.loads(output.read().decode("utf-8"))
         return response_json[0]["generation"]["content"]
 
-
 def generate_feedback(text):
     prompt_template = "De um feedback em português para a apresentação do mentorado destacando os pontos de melhoria. A apresentação do cadidato é a seguinte '{text}'"
 
@@ -262,6 +283,8 @@ def generate_feedback(text):
         endpoint_kwargs={"CustomAttributes": "accept_eula=true"},
     )
 
+    #https://github.com/aws-samples/amazon-bedrock-workshop/blob/main/03_QuestionAnswering/01_qa_w_rag_claude.ipynb
+
     llm_chain = LLMChain(
         llm=sm_llm, prompt=PromptTemplate.from_template(prompt_template)
     )
@@ -270,6 +293,10 @@ def generate_feedback(text):
 
     return response["text"]
 
+def bedrock_feedback(text):
+    prompt_template_bedrock = "De um feedback em português para a apresentação que o mentorado fez simulando uma entrevista destaque os pontos de melhoria e de sugestões. A apresentação do cadidato é a seguinte '{text}'"
+    chain = llm_mentor_response(prompt_template_bedrock)
+    return str(chain)
 
 def evaluate():
     return "test"
@@ -296,6 +323,9 @@ def lambda_handler(event, context):
     ) = calculate_match_words(text)
     metrics["transcription"] = text
     metrics["feedback"] = generate_feedback(text)
+    # replace double quotes to blank space on metrics feedback
+    metrics["feedback"] = metrics["feedback"].replace('"', "`")
+    metrics["feedback_bedrock"] = bedrock_feedback(text).replace('"', "`")
 
     avaliation = evaluate()
 

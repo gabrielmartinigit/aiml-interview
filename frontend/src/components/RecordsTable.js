@@ -48,6 +48,7 @@ function RecordsTable() {
     specific_words: [],
     transcription: "",
     feedback: "",
+    feedback_bedrock: ""
   });
 
   const handleS3Link = (file) => {
@@ -180,6 +181,12 @@ function RecordsTable() {
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             {metrics.feedback}
+          </Typography>
+          <Typography id="modal-modal-title" variant="h5" sx={{ mt: 2 }}>
+            Feedback Bedrock
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            {metrics.feedback_bedrock}
           </Typography>
           <Typography id="modal-modal-title" variant="h5" sx={{ mt: 2 }}>
             Evitar as palavras
