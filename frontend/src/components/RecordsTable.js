@@ -21,7 +21,6 @@ import { Assessment } from "@mui/icons-material";
 const columns = [
   { id: "date", label: "Data", minWidth: 100 },
   { id: "duration", label: "Duração", minWidth: 100 },
-  // { id: "avaliation", label: "Avaliação", minWidth: 100 },
   { id: "video", label: "Vídeo", minWidth: 100 },
   { id: "report", label: "Relatório", minWidth: 100 },
 ];
@@ -42,13 +41,8 @@ function RecordsTable() {
   const [records, setRecords] = useState([]);
   const [reportModal, setReportModal] = useState(false);
   const [metrics, setMetrics] = useState({
-    wpm: "",
-    fillers: [],
-    weasel: [],
-    specific_words: [],
     transcription: "",
-    feedback: "",
-    feedback_bedrock: ""
+    feedback_bedrock: "",
   });
 
   const handleS3Link = (file) => {
@@ -180,34 +174,13 @@ function RecordsTable() {
             Feedback
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {metrics.feedback}
+            {metrics.avaliacao}
           </Typography>
           <Typography id="modal-modal-title" variant="h5" sx={{ mt: 2 }}>
-            Feedback Bedrock
+            Correção
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {metrics.feedback_bedrock}
-          </Typography>
-          <Typography id="modal-modal-title" variant="h5" sx={{ mt: 2 }}>
-            Evitar as palavras
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            <b>Palavras de preenchimento:</b>
-            {metrics.fillers.map((word) => {
-              return " " + word + " ";
-            })}
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            <b>Palavras vagas:</b>
-            {metrics.weasel.map((word) => {
-              return " " + word + " ";
-            })}
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            <b>Palavras com viés ou emoção:</b>
-            {metrics.specific_words.map((word) => {
-              return " " + word + " ";
-            })}
+            {metrics.correcao}
           </Typography>
           <Typography id="modal-modal-title" variant="h5" sx={{ mt: 2 }}>
             Transcrição

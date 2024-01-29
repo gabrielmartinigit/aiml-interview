@@ -7,16 +7,14 @@ dynamodb = boto3.resource("dynamodb")
 
 def lambda_handler(event, context):
     metrics = event[1]["Metrics"]["body"]["metrics"]
-    avaliation = event[1]["Metrics"]["body"]["avaliation"]
     key = event[0]["Records"][0]["s3"]["object"]["key"]
     record_id = os.path.splitext(os.path.basename(key))[0]
     table = dynamodb.Table(TABLE)
 
-    response = table.update_item(
+    table.update_item(
         Key={"record_id": record_id},
-        UpdateExpression="set avaliation=:avaliation, report=:report, video=:video",
+        UpdateExpression="set report=:report, video=:video",
         ExpressionAttributeValues={
-            ":avaliation": avaliation,
             ":report": metrics,
             ":video": key,
         },

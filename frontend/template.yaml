@@ -10,7 +10,7 @@ Resources:
   S3Bucket:
     Type: "AWS::S3::Bucket"
     Properties:
-      BucketName: !Sub "${AWS::AccountId}-${AWS::Region}-spa"
+      BucketName: !Sub "${AWS::AccountId}-${AWS::Region}-${AWS::StackName}-spa"
       PublicAccessBlockConfiguration:
         BlockPublicAcls: true
         BlockPublicPolicy: true
@@ -84,7 +84,7 @@ Resources:
 
 Outputs:
   BucketName:
-    Value: !Sub "${AWS::AccountId}-${AWS::Region}-spa"
+    Value: !Sub "${AWS::AccountId}-${AWS::Region}-${AWS::StackName}-spa"
   CFDistributionName:
     Value: !GetAtt CFDistribution.DomainName
   CFDistributionID:

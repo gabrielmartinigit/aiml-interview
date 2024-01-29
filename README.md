@@ -20,5 +20,5 @@ To deploy the solution, you will need:
 ## Getting Started
 
 1. Deploy the [backend](./backend/README.md)
-2. Chenge [API endpoint](./frontend/src/services/api.js)
+2. Change [API endpoint](./frontend/src/services/api.js)
 3. Deploy [frontend](./frontend/README.md)

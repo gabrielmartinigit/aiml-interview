@@ -24,7 +24,7 @@ Resources:
     Type: "AWS::S3::Bucket"
     DeletionPolicy: Delete
     Properties:
-      BucketName: !Sub "${AWS::AccountId}-${AWS::Region}-media"
+      BucketName: !Sub "${AWS::AccountId}-${AWS::Region}-${AWS::StackName}-media"
       AccelerateConfiguration:
         AccelerationStatus: Enabled
       CorsConfiguration:
@@ -63,7 +63,7 @@ Resources:
   StateMachine:
     Type: AWS::Serverless::StateMachine
     Properties:
-      Name: !Sub "${AWS::AccountId}-${AWS::Region}-analyze"
+      Name: !Sub "${AWS::AccountId}-${AWS::Region}-${AWS::StackName}-analyze"
       Tracing:
         Enabled: true
       DefinitionUri: src/statesmachine/analyze.yaml
@@ -71,7 +71,7 @@ Resources:
         ConvertVideoFunctionArn: !GetAtt ConvertVideoFunction.Arn
         CalculateTextMetricsFunctionArn: !GetAtt CalculateTextMetricsFunction.Arn
         UpdateTableFunctionArn: !GetAtt UpdateTableFunction.Arn
-        TranscribeOutputBucket: !Sub "${AWS::AccountId}-${AWS::Region}-media"
+        TranscribeOutputBucket: !Sub "${AWS::AccountId}-${AWS::Region}-${AWS::StackName}-media"
       Policies:
         - LambdaInvokePolicy:
             FunctionName: !Ref ConvertVideoFunction
@@ -80,7 +80,7 @@ Resources:
         - LambdaInvokePolicy:
             FunctionName: !Ref UpdateTableFunction
         - S3CrudPolicy:
-            BucketName: !Sub "${AWS::AccountId}-${AWS::Region}-media"
+            BucketName: !Sub "${AWS::AccountId}-${AWS::Region}-${AWS::StackName}-media"
         - Version: "2012-10-17"
           Statement:
             - Sid: TranscribeJobPolicy
@@ -137,12 +137,12 @@ Resources:
         - DynamoDBCrudPolicy:
             TableName: !Ref RecordsTable
         - S3CrudPolicy:
-            BucketName: !Sub "${AWS::AccountId}-${AWS::Region}-media"
+            BucketName: !Sub "${AWS::AccountId}-${AWS::Region}-${AWS::StackName}-media"
       Environment:
         Variables:
           TABLE_NAME: !Ref RecordsTable
           INDEX_NAME: !Ref RecordsTableSecondaryIndex
-          BUCKET: !Sub "${AWS::AccountId}-${AWS::Region}-media"
+          BUCKET: !Sub "${AWS::AccountId}-${AWS::Region}-${AWS::StackName}-media"
       Layers:
         - !GetAtt ffmpeglambdalayerpython3.Outputs.ffmpegLayerArn
 
@@ -158,22 +158,16 @@ Resources:
         - x86_64
       Policies:
         - S3CrudPolicy:
-            BucketName: !Sub "${AWS::AccountId}-${AWS::Region}-media"
+            BucketName: !Sub "${AWS::AccountId}-${AWS::Region}-${AWS::StackName}-media"
         - Statement:
-          - Sid: BedrockInvokeEndpoint
-            Effect: Allow
-            Action:
-            - bedrock:InvokeModel
-            Resource: '*'
-        - Statement:
-          - Sid: SagemakerInvokeEndpoint
-            Effect: Allow
-            Action:
-            - sagemaker:InvokeEndpoint
-            Resource: '*'
+            - Sid: BedrockInvokeEndpoint
+              Effect: Allow
+              Action:
+                - bedrock:InvokeModel
+              Resource: "*"
       Environment:
         Variables:
-          BUCKET: !Sub "${AWS::AccountId}-${AWS::Region}-media"
+          BUCKET: !Sub "${AWS::AccountId}-${AWS::Region}-${AWS::StackName}-media"
 
   UpdateTableFunction:
     Type: AWS::Serverless::Function
@@ -193,7 +187,7 @@ Resources:
   RecordsTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Sub "${AWS::AccountId}-${AWS::Region}-records"
+      TableName: !Sub "${AWS::AccountId}-${AWS::Region}-${AWS::StackName}-records"
       AttributeDefinitions:
         - AttributeName: record_id
           AttributeType: S
