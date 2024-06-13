@@ -13,6 +13,11 @@ States:
             Type: Task
             Resource: "${ConvertVideoFunctionArn}"
             ResultPath: "$.Converted"
+            Next: CalculateVideoMetrics
+          CalculateVideoMetrics:
+            Type: Task
+            Resource: ${CalculateVideoMetricsFunctionArn}
+            ResultPath: "$.VideoMetrics"
             End: true
       # Audio
       - StartAt: Transcription
@@ -55,7 +60,7 @@ States:
           CalculateTextMetrics:
             Type: Task
             Resource: ${CalculateTextMetricsFunctionArn}
-            ResultPath: "$.Metrics"
+            ResultPath: "$.TextMetrics"
             End: true
   UpdateTable:
     Type: Task

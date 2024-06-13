@@ -56,7 +56,7 @@ function LogIn() {
           autoComplete="email"
           autoFocus
         />
-        <TextField
+        {/* <TextField
           margin="normal"
           required
           fullWidth
@@ -65,7 +65,7 @@ function LogIn() {
           type="password"
           id="password"
           autoComplete="current-password"
-        />
+        /> */}
         <Button
           type="submit"
           fullWidth
