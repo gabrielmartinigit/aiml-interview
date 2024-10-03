@@ -22,18 +22,6 @@ bedrock = boto3.client(
     region_name="us-east-1",
 )
 
-# # Ask LLM
-# llm_mentor_response = Bedrock(
-#     model_id=LLM_MODEL_ID,
-#     model_kwargs={
-#         "max_tokens_to_sample": 8000,
-#         "temperature": 0.2,
-#         "top_p": 0.7,
-#     },
-#     client=bedrock,
-# )
-
-
 def bedrock_feedback(perguntas, apresentacao):
     prompt_template_bedrock = f"""Use a transcrição da entrevista para auxiliar o entrevistador:
   

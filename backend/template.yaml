@@ -167,6 +167,24 @@ Resources:
         Variables:
           BUCKET: !Sub "${AWS::AccountId}-${AWS::Region}-${AWS::StackName}-media"
 
+  CalculateVideoMetricsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/statesmachine/calculate_video_metrics/
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      Timeout: 300
+      MemorySize: 2240
+      Architectures:
+        - x86_64
+      Policies:
+        - S3CrudPolicy:
+            BucketName: !Sub "${AWS::AccountId}-${AWS::Region}-${AWS::StackName}-media"
+        - RekognitionDetectOnlyPolicy: {}
+      Environment:
+        Variables:
+          BUCKET: !Sub "${AWS::AccountId}-${AWS::Region}-${AWS::StackName}-media"
+
   CalculateTextMetricsFunction:
     Type: AWS::Serverless::Function
     Properties:

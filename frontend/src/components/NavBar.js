@@ -8,11 +8,11 @@ export const NavBar = () => {
   return (
     <AppBar position="static" color="primary">
       <Toolbar>
-        <Box sx={{ mr: 2 }}>
-          <img src={logo} alt="AWS logo" width={60} />
+        <Box sx={{ m: 2 }}>
+          <img src={logo} alt="AWS logo" width={120} />
         </Box>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          Simulador de Entrevistas
+          AWS Health
         </Typography>
         {!!user && (
           <>

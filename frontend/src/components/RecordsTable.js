@@ -22,7 +22,7 @@ const columns = [
   { id: "date", label: "Data", minWidth: 100 },
   { id: "duration", label: "Duração", minWidth: 100 },
   { id: "video", label: "Vídeo", minWidth: 100 },
-  { id: "report", label: "Relatório", minWidth: 100 },
+  { id: "report", label: "Assistente", minWidth: 100 },
 ];
 
 const modalStyle = {
@@ -168,19 +168,25 @@ function RecordsTable() {
       >
         <Box sx={modalStyle}>
           <Typography id="modal-modal-title" variant="h4">
-            Resultado da simulação
+            Resultado
           </Typography>
           <Typography id="modal-modal-title" variant="h5" sx={{ mt: 2 }}>
-            Feedback
+            Sintomas
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {metrics.avaliacao}
+            {metrics.symptoms}
           </Typography>
           <Typography id="modal-modal-title" variant="h5" sx={{ mt: 2 }}>
-            Correção
+            Causas
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {metrics.correcao}
+            {metrics.causes}
+          </Typography>
+          <Typography id="modal-modal-title" variant="h5" sx={{ mt: 2 }}>
+            Plano
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            {metrics.plan}
           </Typography>
           <Typography id="modal-modal-title" variant="h5" sx={{ mt: 2 }}>
             Transcrição
