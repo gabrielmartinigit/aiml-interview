@@ -204,6 +204,8 @@ Resources:
       Environment:
         Variables:
           TABLE_NAME: !Ref RecordsTable
+          BUCKET: !Sub "${AWS::AccountId}-${AWS::Region}-${AWS::StackName}-media"
+
 
   RecordsTable:
     Type: AWS::DynamoDB::Table
