@@ -4,9 +4,6 @@ import os
 import json
 import boto3
 
-# LLM
-from langchain.llms import Bedrock
-
 BUCKET = os.environ["BUCKET"]
 s3 = boto3.client("s3")
 
