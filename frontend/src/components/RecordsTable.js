@@ -63,15 +63,16 @@ function RecordsTable() {
   // };
   const handleOpenReport = (record) => {
   const parsedReport = JSON.parse(record.report.replace(/'/g, '"'));
-  const objects = record.objects === "[]" ? [] : JSON.parse(record.objects);
+  let objects = record.objects.trim().match(/\[.+\]/)?.[0] || "[]";
+  objects = JSON.parse(objects.replace(/'/g, '"'));
 
   setMetrics({
-      ...parsedReport,
-      attention: record.attention, // Incluir attention
-      objects: objects, // Incluir objects
-    });
-    setReportModal(true);
-  };
+    ...parsedReport,
+    attention: record.attention,
+    objects: objects,
+  });
+  setReportModal(true);
+};
   const getAttentionString = (attentionValue) => {
     return attentionValue === "True" ? "Sim" : "Não";
   };
@@ -206,12 +207,17 @@ function RecordsTable() {
           <Typography id="modal-modal-title" variant="h5" sx={{ mt: 2 }}>
             Objetos [Óculos escudos e/ou Boné]
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             {metrics.objects.length > 0 ? (
-              metrics.objects.join(", ")
+              metrics.objects.map((obj, index) => (
+                <span key={index}>
+                  {obj}
+                  {index !== metrics.objects.length - 1 ? ", " : ""}
+                </span>
+              ))
             ) : (
               "Nenhum objeto detectado"
-            )}       
+            )}
           </Typography>
           <Typography id="modal-modal-title" variant="h5" sx={{ mt: 2 }}>
             Entrevistado estava Atento?
