@@ -12,7 +12,7 @@ export const NavBar = () => {
           <img src={logo} alt="AWS logo" width={120} />
         </Box>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          AWS Health
+          Simulador de entrevista
         </Typography>
         {!!user && (
           <>

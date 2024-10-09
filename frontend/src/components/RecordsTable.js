@@ -22,7 +22,7 @@ const columns = [
   { id: "date", label: "Data", minWidth: 100 },
   { id: "duration", label: "Duração", minWidth: 100 },
   { id: "video", label: "Vídeo", minWidth: 100 },
-  { id: "report", label: "Assistente", minWidth: 100 },
+  { id: "report", label: "Relatório", minWidth: 100 },
 ];
 
 const modalStyle = {
@@ -43,6 +43,8 @@ function RecordsTable() {
   const [metrics, setMetrics] = useState({
     transcription: "",
     feedback_bedrock: "",
+    attention: "", // Adicionar nova propriedade
+    objects: "", // Adicionar nova propriedade
   });
 
   const handleS3Link = (file) => {
@@ -55,11 +57,25 @@ function RecordsTable() {
       });
   };
 
+  // const handleOpenReport = (record) => {
+  //   setMetrics(JSON.parse(record.report.replace(/'/g, '"')));
+  //   setReportModal(true);
+  // };
   const handleOpenReport = (record) => {
-    setMetrics(JSON.parse(record.report.replace(/'/g, '"')));
-    setReportModal(true);
-  };
+  const parsedReport = JSON.parse(record.report.replace(/'/g, '"'));
+  let objects = record.objects.trim().match(/\[.+\]/)?.[0] || "[]";
+  objects = JSON.parse(objects.replace(/'/g, '"'));
 
+  setMetrics({
+    ...parsedReport,
+    attention: record.attention,
+    objects: objects,
+  });
+  setReportModal(true);
+};
+  const getAttentionString = (attentionValue) => {
+    return attentionValue === "True" ? "Sim" : "Não";
+  };
   const handleCloseReport = () => setReportModal(false);
 
   const refreshTable = useCallback((email) => {
@@ -168,31 +184,46 @@ function RecordsTable() {
       >
         <Box sx={modalStyle}>
           <Typography id="modal-modal-title" variant="h4">
-            Resultado
+            Resultado da simulação
           </Typography>
           <Typography id="modal-modal-title" variant="h5" sx={{ mt: 2 }}>
-            Sintomas
+            Feedback
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {metrics.symptoms}
+            {metrics.avaliacao}
           </Typography>
           <Typography id="modal-modal-title" variant="h5" sx={{ mt: 2 }}>
-            Causas
+            Correção
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {metrics.causes}
-          </Typography>
-          <Typography id="modal-modal-title" variant="h5" sx={{ mt: 2 }}>
-            Plano
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {metrics.plan}
+            {metrics.correcao}
           </Typography>
           <Typography id="modal-modal-title" variant="h5" sx={{ mt: 2 }}>
             Transcrição
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             {metrics.transcription}
+          </Typography>
+          <Typography id="modal-modal-title" variant="h5" sx={{ mt: 2 }}>
+            Objetos [Óculos escudos e/ou Boné]
+          </Typography>
+           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            {metrics.objects.length > 0 ? (
+              metrics.objects.map((obj, index) => (
+                <span key={index}>
+                  {obj}
+                  {index !== metrics.objects.length - 1 ? ", " : ""}
+                </span>
+              ))
+            ) : (
+              "Nenhum objeto detectado"
+            )}
+          </Typography>
+          <Typography id="modal-modal-title" variant="h5" sx={{ mt: 2 }}>
+            Entrevistado estava Atento?
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            {getAttentionString(metrics.attention)}
           </Typography>
         </Box>
       </Modal>

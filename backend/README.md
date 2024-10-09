@@ -4,7 +4,7 @@
 
 ```bash
 sam validate
-sam build
+sam build --use-container
 sam deploy --stack-name interview-backend --resolve-s3 --resolve-image-repos --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_IAM
 ```
 

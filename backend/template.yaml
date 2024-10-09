@@ -148,7 +148,7 @@ Resources:
           BUCKET: !Sub "${AWS::AccountId}-${AWS::Region}-${AWS::StackName}-media"
       Layers:
         - !GetAtt ffmpeglambdalayerpython3.Outputs.ffmpegLayerArn
-
+        
   CalculateVideoMetricsFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -204,6 +204,8 @@ Resources:
       Environment:
         Variables:
           TABLE_NAME: !Ref RecordsTable
+          BUCKET: !Sub "${AWS::AccountId}-${AWS::Region}-${AWS::StackName}-media"
+
 
   RecordsTable:
     Type: AWS::DynamoDB::Table
@@ -320,3 +322,4 @@ Outputs:
   SimuladorApi:
     Description: API Gateway endpoint URL
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+
